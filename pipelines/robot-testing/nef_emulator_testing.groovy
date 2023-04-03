@@ -1,25 +1,33 @@
-package pipelines
+package pipelines;
+
+String runCapifLocal(String nginxHost) {
+    return nginxHost.matches('^(http|https)://localhost.*') ? 'true' : 'false'
+}
 
 pipeline{
 
-    agent { node { label 'devopsvm' }  }
+    agent { node { label 'evol5-slave' }  }
 
     parameters{
-        string(name: 'ROBOT_DOCKER_IMAGE_NAME', defaultValue: 'robot-framework-image', description: 'Robot Docker image name')
-        string(name: 'ROBOT_DOCKER_IMAGE_VERSION', defaultValue: '3.1.1', description: 'Robot Docker image version')
-        string(name: 'NEF_URL', defaultValue: 'https://localhost:4443', description: 'Url to test NEF endpoints')
+        string(name: 'NGINX_HOSTNAME', defaultValue: 'https://localhost:4443', description: 'nginx hostname')        // nginx-evolved5g.apps-dev.hi.inet
+        string(name: 'ROBOT_DOCKER_IMAGE_VERSION', defaultValue: '3.1.2', description: 'Robot Docker image version')
+        // string(name: 'NEF_API_HOSTNAME', defaultValue: 'https://5g-api-emulator.medianetlab.eu', description: 'netapp hostname')
         string(name: 'ADMIN_USER', defaultValue: 'admin@my-email.com', description: 'NEF Admin username')
         password(name: 'ADMIN_PASS', defaultValue: 'pass', description: 'NEF Admin password')
     }
 
     environment {
-        ROOT_DIRECTORY = "${WORKSPACE}/"
+        NEF_EMULATOR_DIRECTORY = "${WORKSPACE}/nef-emulator"
         ROBOT_TESTS_DIRECTORY = "${WORKSPACE}/tests"
         ROBOT_RESULTS_DIRECTORY = "${WORKSPACE}/results"
-        NEF_SERVICES_ENDPOINT = ""
-        RUN_NEF_LOCALLY = "true"
-        RUN_CAPIF_LOCALLY = "true"
+        NGINX_HOSTNAME = "${params.NGINX_HOSTNAME}"
+        ROBOT_VERSION = "${params.ROBOT_DOCKER_IMAGE_VERSION}"
+        ROBOT_IMAGE_NAME = 'dockerhub.hi.inet/dummy-netapp-testing/robot-test-image'
+        AWS_DEFAULT_REGION = 'eu-central-1'
+        OPENSHIFT_URL= 'https://openshift-epg.hi.inet:443'
+        RUN_LOCAL_NEF = runCapifLocal("${params.NGINX_HOSTNAME}")
     }
+
 
     stages{
         stage("Checkout nef services"){
