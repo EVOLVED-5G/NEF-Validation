@@ -32,7 +32,7 @@ pipeline{
     stages{
         stage("Checkout nef services"){
             when {
-                expression { RUN_NEF_LOCALLY == 'true' }
+                expression { RUN_LOCAL_NEF == 'true' }
             }
             steps{
                 checkout([$class: 'GitSCM',
@@ -47,7 +47,7 @@ pipeline{
         }
         stage("Checkout capif services"){
             when {
-                expression { RUN_NEF_LOCALLY == 'true' }
+                expression { RUN_LOCAL_NEF == 'true' }
             }
             steps{
                 checkout([$class: 'GitSCM',
@@ -65,7 +65,7 @@ pipeline{
             stages{
                 stage("Set up capif services."){
                     when {
-                        expression { RUN_NEF_LOCALLY == 'true' }
+                        expression { RUN_LOCAL_NEF == 'true' }
                     }
                     steps {
                         dir ("./capif-services") {
@@ -79,13 +79,12 @@ pipeline{
                 }
                 stage("Set up nef services."){
                     when {
-                        expression { RUN_NEF_LOCALLY == 'true' }
+                        expression { RUN_LOCAL_NEF == 'true' }
                     }
                     steps {
                         dir ("./nef-services") {
                             sh """
                                 sed -i "s/USE_PUBLIC_KEY_VERIFICATION=true/USE_PUBLIC_KEY_VERIFICATION=false/g" env-file-for-local.dev
-                                sed -i "s/EXTERNAL_NET=false/EXTERNAL_NET=true/g" env-file-for-local.dev
                                 make prepare-dev-env
                                 make build
                                 make upd
@@ -100,21 +99,23 @@ pipeline{
         }
         stage ("Setup Robot FW && Run tests"){
             stages{
-                stage("Set up Robot FW container."){
-                    steps {
-                        dir ("${ROOT_DIRECTORY}") {
+                stage("Setup RobotFramwork container"){
+                    steps{
+                        dir ("${WORKSPACE}") {
                             sh """
-                                docker run --rm -d -t --name netapp_robot \
+                                docker pull ${ROBOT_IMAGE_NAME}:${ROBOT_VERSION} 
+                                docker run --rm -d -t \
+                                    --name robot \
                                     --network="host" \
                                     -v ${WORKSPACE}/tests:/opt/robot-tests/tests/ \
                                     -v ${WORKSPACE}/libraries:/opt/robot-tests/libraries/ \
                                     -v ${WORKSPACE}/resources:/opt/robot-tests/resources/ \
                                     -v ${WORKSPACE}/results:/opt/robot-tests/results/ \
-                                    --env NEF_URL=${NEF_URL} \
-                                    --env NGINX_HOSTNAME=${NEF_URL} \
+                                    --env NEF_URL=${NGINX_HOSTNAME} \
+                                    --env NGINX_HOSTNAME=${NGINX_HOSTNAME} \
                                     --env ADMIN_USER=${ADMIN_USER} \
                                     --env ADMIN_PASS=$ADMIN_PASS \
-                                    ${ROBOT_DOCKER_IMAGE_NAME}:${ROBOT_DOCKER_IMAGE_VERSION}  
+                                    ${ROBOT_IMAGE_NAME}:${ROBOT_VERSION} \
                             """
                         }
                     }
@@ -122,13 +123,12 @@ pipeline{
                 stage("Run test cases."){
                     steps{
                         sh """
-                            docker exec -t netapp_robot bash \
+                            docker exec -t robot bash \
                             -c "pabot --processes 1 --outputdir /opt/robot-tests/results/ /opt/robot-tests/tests/; \
                                 rebot --outputdir /opt/robot-tests/results --output output.xml --merge /opt/robot-tests/results/output.xml;"
                         """
                     }
                 }
-
             }
         }
     }
@@ -136,7 +136,7 @@ pipeline{
     post{
         always{
             script {
-                if(env.RUN_NEF_LOCALLY == 'true'){
+                if(env.RUN_LOCAL_NEF == 'true'){
                     dir ("${env.ROOT_DIRECTORY}/nef-services") {
                         echo 'Shutdown all nef services'
                         sh """
@@ -152,7 +152,7 @@ pipeline{
                     }
                 }
                 sh """
-                    docker kill netapp_robot
+                    docker kill robot
                 """
             }
 
