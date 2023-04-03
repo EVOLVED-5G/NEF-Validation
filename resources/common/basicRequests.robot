@@ -17,8 +17,8 @@ Create NEF Session
 
     [Arguments]    ${server}=${NONE}    ${auth}=${NONE}
 
-    Run Keyword If    "${server}" != "${NONE}"    Create Session    apisession    ${server}            verify=True
-    ...               ELSE                        Create Session    apisession    ${NGINX_HOSTNAME}    verify=True
+    Run Keyword If    "${server}" != "${NONE}"    Create Session    apisession    ${server}            verify=False
+    ...               ELSE                        Create Session    apisession    ${NGINX_HOSTNAME}    verify=False
 
     ${headers}=    Run Keyword If    "${auth}" != "${NONE}" and "${auth}" != "${NETAPP_NOT_REGISTERED}"       Create Dictionary    Authorization=Bearer ${auth}  
     ...            ELSE IF           "${auth}" == "${NETAPP_NOT_REGISTERED}"                                  Create Dictionary    Authorization=Basic ${auth}  
@@ -81,7 +81,7 @@ Register User At Jwt Auth
 
     ${body}=    Create Dictionary    email=${email}    full_name=${full_name}    password=${password}
 
-    Create Session    mysession    ${NGINX_HOSTNAME}     verify=True
+    Create Session    mysession    ${NGINX_HOSTNAME}     verify=False
 
     ${resp}=    POST On Session    mysession    /api/v1/users/open    json=${body}
 
@@ -104,7 +104,7 @@ Create Temporary User
 
     ${body}=    Create Dictionary    email=${email}    full_name=${full_name}    password=${password}
 
-    Create Session    mysession    ${NGINX_HOSTNAME}     verify=True
+    Create Session    mysession    ${NGINX_HOSTNAME}     verify=False
 
     ${resp}=    POST On Session    mysession    /api/v1/users/open    json=${body}
 
@@ -145,7 +145,7 @@ Import Scenario
 
 Clean Test Information By HTTP Requests
 
-    Create Session    jwtsession    ${NGINX_HOSTNAME}     verify=True
+    Create Session    jwtsession    ${NGINX_HOSTNAME}     verify=False
 
     ${resp}=                      DELETE On Session      jwtsession    /testusers
     Should Be Equal As Strings    ${resp.status_code}    200
