@@ -137,13 +137,14 @@ pipeline{
         always{
             script {
                 if(env.RUN_LOCAL_NEF == 'true'){
-                    dir ("${env.ROOT_DIRECTORY}/nef-services") {
+                    dir ("./nef-services") {
                         echo 'Shutdown all nef services'
                         sh """
+                            ls -la
                             docker-compose --profile debug down -v --rmi all
                         """
                     }
-                    dir ("${env.ROOT_DIRECTORY}/capif-services") {
+                    dir ("./capif-services") {
                         echo 'Shutdown all capif services'
                         sh """
                             cd services
