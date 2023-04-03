@@ -13,7 +13,7 @@ Get Access Token
     ${url}=    Set Variable    ${nef_url}/api/v1/login/access-token
     ${payload}=    Create Dictionary    username=${user}    password=${password}
     ${headers}=    Create Dictionary    Content-Type=application/x-www-form-urlencoded
-    ${response}=    POST    url=${url}    headers=${headers}    data=${payload}    verify=${False}   expected_status=${status}
+    ${response}=    POST    url=${url}    headers=${headers}    data=${payload}    expected_status=${status}    verify=${False}
 
     [Return]     ${response}
 
