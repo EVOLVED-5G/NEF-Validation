@@ -13,7 +13,7 @@ pipeline{
     agent { node { label 'evol5-slave' }  }
 
     parameters{
-        string(name: 'ROBOT_DOCKER_IMAGE_VERSION', defaultValue: '3.1.2', description: 'Robot Docker image version')
+        string(name: 'ROBOT_DOCKER_IMAGE_VERSION', defaultValue: '3.1.1', description: 'Robot Docker image version')
         string(name: 'CAPIF_HOST', defaultValue: 'capifcore', description: 'CAPIF host')
         string(name: 'CAPIF_HTTP_PORT', defaultValue: '8080', description: 'CAPIF http port')
         string(name: 'CAPIF_HTTPS_PORT', defaultValue: '443', description: 'CAPIF https port')
