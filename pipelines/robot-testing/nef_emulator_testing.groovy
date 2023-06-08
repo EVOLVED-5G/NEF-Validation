@@ -1,7 +1,11 @@
 package pipelines;
 
-String runCapifLocal(String nginxHost) {
+String runNefLocal(String nginxHost) {
     return nginxHost.matches('^(http|https)://localhost.*') ? 'true' : 'false'
+}
+
+String runCapifLocal(String capif_host) {
+    return capif_host.matches('capifcore') ? 'true' : 'false'
 }
 
 pipeline{
@@ -9,9 +13,11 @@ pipeline{
     agent { node { label 'evol5-slave' }  }
 
     parameters{
-        string(name: 'NGINX_HOSTNAME', defaultValue: 'https://localhost:4443', description: 'nginx hostname')        // nginx-evolved5g.apps-dev.hi.inet
         string(name: 'ROBOT_DOCKER_IMAGE_VERSION', defaultValue: '3.1.2', description: 'Robot Docker image version')
-        // string(name: 'NEF_API_HOSTNAME', defaultValue: 'https://5g-api-emulator.medianetlab.eu', description: 'netapp hostname')
+        string(name: 'CAPIF_HOST', defaultValue: 'capifcore', description: 'CAPIF host')
+        string(name: 'CAPIF_HTTP_PORT', defaultValue: '8080', description: 'CAPIF http port')
+        string(name: 'CAPIF_HTTPS_PORT', defaultValue: '443', description: 'CAPIF https port')
+        string(name: 'NEF_API_HOSTNAME', defaultValue: 'https://localhost:4443', description: 'NEF Emulator api hostname')
         string(name: 'ADMIN_USER', defaultValue: 'admin@my-email.com', description: 'NEF Admin username')
         password(name: 'ADMIN_PASS', defaultValue: 'pass', description: 'NEF Admin password')
     }
@@ -20,12 +26,11 @@ pipeline{
         NEF_EMULATOR_DIRECTORY = "${WORKSPACE}/nef-emulator"
         ROBOT_TESTS_DIRECTORY = "${WORKSPACE}/tests"
         ROBOT_RESULTS_DIRECTORY = "${WORKSPACE}/results"
-        NGINX_HOSTNAME = "${params.NGINX_HOSTNAME}"
+        NGINX_HOSTNAME = "${params.NEF_API_HOSTNAME}"
         ROBOT_VERSION = "${params.ROBOT_DOCKER_IMAGE_VERSION}"
         ROBOT_IMAGE_NAME = 'dockerhub.hi.inet/dummy-netapp-testing/robot-test-image'
-        AWS_DEFAULT_REGION = 'eu-central-1'
-        OPENSHIFT_URL= 'https://openshift-epg.hi.inet:443'
-        RUN_LOCAL_NEF = runCapifLocal("${params.NGINX_HOSTNAME}")
+        RUN_LOCAL_NEF = runNefLocal("${params.NEF_API_HOSTNAME}")
+        EXTERNAL_CAPIF = runCapifLocal("${params.CAPIF_HOST}")
     }
 
 
@@ -47,7 +52,7 @@ pipeline{
         }
         stage("Checkout capif services"){
             when {
-                expression { RUN_LOCAL_NEF == 'true' }
+                expression { RUN_LOCAL_NEF == 'true' && CAPIF_HOST == 'capifcore' }
             }
             steps{
                 checkout([$class: 'GitSCM',
@@ -65,7 +70,7 @@ pipeline{
             stages{
                 stage("Set up capif services."){
                     when {
-                        expression { RUN_LOCAL_NEF == 'true' }
+                        expression { RUN_LOCAL_NEF == 'true' && CAPIF_HOST == 'capifcore'}
                     }
                     steps {
                         dir ("./capif-services") {
@@ -84,6 +89,10 @@ pipeline{
                     steps {
                         dir ("./nef-services") {
                             sh """
+                                sed -i "s/CAPIF_HOST=capifcore/CAPIF_HOST=${CAPIF_HOST}/g" env-file-for-local.dev
+                                sed -i "s/CAPIF_HTTP_PORT=8080/CAPIF_HTTP_PORT=${CAPIF_HTTP_PORT}/g" env-file-for-local.dev
+                                sed -i "s/CAPIF_HTTPS_PORT=443/CAPIF_HTTPS_PORT=${CAPIF_HTTPS_PORT}/g" env-file-for-local.dev
+                                sed -i "s/EXTERNAL_NET=true/EXTERNAL_NET=${EXTERNAL_CAPIF}/g" env-file-for-local.dev
                                 sed -i "s/USE_PUBLIC_KEY_VERIFICATION=true/USE_PUBLIC_KEY_VERIFICATION=false/g" env-file-for-local.dev
                                 make prepare-dev-env
                                 make build
@@ -144,6 +153,9 @@ pipeline{
                             docker-compose --profile debug down -v --rmi all
                         """
                     }
+                    
+                }
+                if(env.RUN_LOCAL_NEF == 'true' && ${CAPIF_HOST} == 'capifcore'){
                     dir ("./capif-services") {
                         echo 'Shutdown all capif services'
                         sh """
