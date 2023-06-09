@@ -160,7 +160,7 @@ pipeline{
                     }
                     
                 }
-                if(env.RUN_LOCAL_NEF == 'true' && env.LOCAL_CAPIF == 'false'){
+                if(env.RUN_LOCAL_NEF == 'true' && env.LOCAL_CAPIF == 'true'){
                     dir ("./capif-services") {
                         echo 'Shutdown all capif services'
                         catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS'){
