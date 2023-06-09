@@ -30,7 +30,7 @@ pipeline{
         ROBOT_VERSION = "${params.ROBOT_DOCKER_IMAGE_VERSION}"
         ROBOT_IMAGE_NAME = 'dockerhub.hi.inet/dummy-netapp-testing/robot-test-image'
         RUN_LOCAL_NEF = runNefLocal("${params.NEF_API_HOSTNAME}")
-        EXTERNAL_CAPIF = runCapifLocal("${params.CAPIF_HOST}")
+        LOCAL_CAPIF = runCapifLocal("${params.CAPIF_HOST}")
     }
 
 
@@ -92,7 +92,7 @@ pipeline{
                                 sed -i "s/CAPIF_HOST=capifcore/CAPIF_HOST=${CAPIF_HOST}/g" env-file-for-local.dev
                                 sed -i "s/CAPIF_HTTP_PORT=8080/CAPIF_HTTP_PORT=${CAPIF_HTTP_PORT}/g" env-file-for-local.dev
                                 sed -i "s/CAPIF_HTTPS_PORT=443/CAPIF_HTTPS_PORT=${CAPIF_HTTPS_PORT}/g" env-file-for-local.dev
-                                sed -i "s/EXTERNAL_NET=true/EXTERNAL_NET=${EXTERNAL_CAPIF}/g" env-file-for-local.dev
+                                sed -i "s/EXTERNAL_NET=true/EXTERNAL_NET=${LOCAL_CAPIF}/g" env-file-for-local.dev
                                 sed -i "s/USE_PUBLIC_KEY_VERIFICATION=true/USE_PUBLIC_KEY_VERIFICATION=false/g" env-file-for-local.dev
                                 make prepare-dev-env
                                 make build
@@ -155,7 +155,7 @@ pipeline{
                     }
                     
                 }
-                if(env.RUN_LOCAL_NEF == 'true' && ${CAPIF_HOST} == 'capifcore'){
+                if(env.RUN_LOCAL_NEF == 'true' && env.LOCAL_CAPIF == 'false'){
                     dir ("./capif-services") {
                         echo 'Shutdown all capif services'
                         sh """
