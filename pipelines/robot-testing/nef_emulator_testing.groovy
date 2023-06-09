@@ -145,30 +145,34 @@ pipeline{
     post{
         always{
             script {
+                sh """
+                    docker kill robot
+                """
                 if(env.RUN_LOCAL_NEF == 'true'){
                     dir ("./nef-services") {
                         echo 'Shutdown all nef services'
-                        sh """
-                            ls -la
-                            docker-compose --profile debug down -v --rmi all
-                        """
+                        catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS'){
+                            sh """
+                                ls -la
+                                docker-compose --profile debug down -v --rmi all
+                            """
+                        }
                     }
                     
                 }
                 if(env.RUN_LOCAL_NEF == 'true' && env.LOCAL_CAPIF == 'false'){
                     dir ("./capif-services") {
                         echo 'Shutdown all capif services'
-                        sh """
-                            cd services
-                            ./clean_capif_docker_services.sh
-                        """
+                        catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS'){
+                            sh """
+                                cd services
+                                ./clean_capif_docker_services.sh
+                            """
+                        }
                     }
                 }
-                sh """
-                    docker kill robot
-                """
+                
             }
-
             script {
                 echo "Deleting directories."
                 cleanWs deleteDirs: true
