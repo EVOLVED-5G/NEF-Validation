@@ -1,5 +1,6 @@
 *** Settings ***
 Library     /opt/robot-tests/libraries/helpers.py
+Resource    /opt/robot-tests/resources/common/basicRequests.robot
 
 *** Variables ***
 
