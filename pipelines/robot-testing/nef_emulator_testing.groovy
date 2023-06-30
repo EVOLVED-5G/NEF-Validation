@@ -171,8 +171,16 @@ pipeline{
                         }
                     }
                 }
-                
             }
+            publishHTML([allowMissing: true,
+                    alwaysLinkToLastBuild: false,
+                    keepAll: true,
+                    reportDir: 'results',
+                    reportFiles: 'report.html',
+                    reportName: 'Robot Framework Tests Report NEF',
+                    reportTitles: '',
+                    includes:'**/*'])
+            junit allowEmptyResults: true, testResults: 'results/xunit.xml'
             script {
                 echo "Deleting directories."
                 cleanWs deleteDirs: true
