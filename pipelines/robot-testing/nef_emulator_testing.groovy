@@ -133,6 +133,7 @@ pipeline{
                                     -v ${WORKSPACE}/resources:/opt/robot-tests/resources/ \
                                     -v ${WORKSPACE}/results:/opt/robot-tests/results/ \
                                     --env NEF_URL=${NGINX_HOSTNAME} \
+                                    --env BUILD_NUMBER=$BUILD_NUMBER \
                                     --env NGINX_HOSTNAME=${NGINX_HOSTNAME} \
                                     --env ADMIN_USER=${ADMIN_USER} \
                                     --env ADMIN_PASS=$ADMIN_PASS \

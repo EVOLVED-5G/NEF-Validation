@@ -12,7 +12,7 @@ ${NEF_INVALID_TOKEN}    eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2U
 Update valid user valid token
     [Tags]    update_valid_user_valid_token
     ${token}=    Get Access Token    %{NEF_URL}    %{ADMIN_USER}    %{ADMIN_PASS}
-    ${user}=    Create Dictionary    email=update-user@mail.com  is_active=true  is_superuser=false  full_name=update-user  password=pass
+    ${user}=    Create Dictionary    email=update-user-%{BUILD_NUMBER}@mail.com  is_active=true  is_superuser=false  full_name=update-user  password=pass
     ${resp}=    Create User    %{NEF_URL}  ${token.json()['access_token']}  ${user}
     ${new_user}=    Set Variable    ${resp.json()}
     Remove From Dictionary    ${new_user}    full_name

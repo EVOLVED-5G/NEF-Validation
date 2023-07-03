@@ -10,7 +10,7 @@ Resource        /opt/robot-tests/resources/users.robot
 *** Test Cases ***
 Create valid user
     [Tags]    create_valid_user
-    ${user}=    Create Dictionary    email=create-user-open@mail.com  is_active=true  is_superuser=false  full_name=create-user-open  password=pass
+    ${user}=    Create Dictionary    email=create-user-open-%{BUILD_NUMBER}@mail.com  is_active=true  is_superuser=false  full_name=create-user-open  password=pass
     ${resp}=    Create User Open    %{NEF_URL}  ${user}
 
     Status Should Be    200  ${resp}

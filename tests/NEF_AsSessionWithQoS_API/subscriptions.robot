@@ -43,7 +43,7 @@ Create Nef subscription
 
     [Tags]    create_nef_subscription
 
-    Initialize Test, Register And Import Scenario    email=qos@example.com    full_name=robot-qos    password=password     num=2
+    Initialize Test, Register And Import Scenario    email=qos-%{BUILD_NUMBER}@example.com    full_name=robot-qos    password=password     num=2
 
     create_nef_subscription_function
 
