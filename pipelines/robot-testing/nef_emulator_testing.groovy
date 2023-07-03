@@ -3,14 +3,25 @@ String runCapifLocal(String nginxHost) {
     return nginxHost.matches('^(http|https)://localhost.*') ? 'true' : 'false'
 }
 
+def getAgent(deployment) {
+    String var = deployment
+    if ('openshift'.equals(var)) {
+        return 'evol5-openshift'
+    }else if ('kubernetes-athens'.equals(var)) {
+        return 'evol5-athens'
+    }else {
+        return 'evol5-slave'
+    }
+}
+
 pipeline{
 
-    agent { node { label 'evol5-slave' }  }
+    agent { node { label getAgent("${params.DEPLOYMENT }") == 'any' ? '' : getAgent("${params.DEPLOYMENT }") } }
 
     parameters{
+        choice(name: 'DEPLOYMENT', choices: ['openshift', 'kubernetes-athens', 'kubernetes-uma'], description: 'Environment where tests will run')
         string(name: 'NGINX_HOSTNAME', defaultValue: 'https://localhost:4443', description: 'nginx hostname')        // nginx-evolved5g.apps-dev.hi.inet
         string(name: 'ROBOT_DOCKER_IMAGE_VERSION', defaultValue: '3.1.2', description: 'Robot Docker image version')
-        // string(name: 'NEF_API_HOSTNAME', defaultValue: 'https://5g-api-emulator.medianetlab.eu', description: 'netapp hostname')
         string(name: 'ADMIN_USER', defaultValue: 'admin@my-email.com', description: 'NEF Admin username')
         password(name: 'ADMIN_PASS', defaultValue: 'pass', description: 'NEF Admin password')
     }
@@ -131,7 +142,15 @@ pipeline{
                     docker kill robot
                 """
             }
-
+            publishHTML([allowMissing: true,
+                    alwaysLinkToLastBuild: false,
+                    keepAll: true,
+                    reportDir: 'results',
+                    reportFiles: 'report.html',
+                    reportName: 'Robot Framework Tests Report NEF',
+                    reportTitles: '',
+                    includes:'**/*'])
+            junit allowEmptyResults: true, testResults: 'results/xunit.xml'
             script {
                 echo "Deleting directories."
                 cleanWs deleteDirs: true
