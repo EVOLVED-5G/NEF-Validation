@@ -21,7 +21,7 @@ pipeline{
     parameters{
         choice(name: 'DEPLOYMENT', choices: ['openshift', 'kubernetes-athens', 'kubernetes-uma'], description: 'Environment where tests will run')
         string(name: 'NGINX_HOSTNAME', defaultValue: 'https://localhost:4443', description: 'nginx hostname')        // nginx-evolved5g.apps-dev.hi.inet
-        string(name: 'ROBOT_DOCKER_IMAGE_VERSION', defaultValue: '3.1.2', description: 'Robot Docker image version')
+        string(name: 'ROBOT_DOCKER_IMAGE_VERSION', defaultValue: '3.1.1', description: 'Robot Docker image version')
         string(name: 'ADMIN_USER', defaultValue: 'admin@my-email.com', description: 'NEF Admin username')
         password(name: 'ADMIN_PASS', defaultValue: 'pass', description: 'NEF Admin password')
     }
