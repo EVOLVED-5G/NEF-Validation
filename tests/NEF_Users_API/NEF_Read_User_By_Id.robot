@@ -17,7 +17,7 @@ Read By Id valid user valid token
     ${user}=    Set Variable    ${resp.json()}
     ${resp}=    Read User By Id    %{NEF_URL}  ${token.json()['access_token']}  ${user}
 
-    Should Contain    ${resp.text}    read-user@mail.com
+    Should Contain    ${resp.text}    read-user-%{BUILD_NUMBER}@mail.com
     Status Should Be    200  ${resp}
 
 Read By Id invalid user valid token
