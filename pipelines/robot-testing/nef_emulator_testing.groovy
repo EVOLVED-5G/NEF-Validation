@@ -8,11 +8,23 @@ String runCapifLocal(String capif_host) {
     return capif_host.matches('capifcore') ? 'true' : 'false'
 }
 
+def getAgent(deployment) {
+    String var = deployment
+    if ('openshift'.equals(var)) {
+        return 'evol5-openshift'
+    }else if ('kubernetes-athens'.equals(var)) {
+        return 'evol5-athens'
+    }else {
+        return 'evol5-slave'
+    }
+}
+
 pipeline{
 
-    agent { node { label 'evol5-slave' }  }
+    agent { node { label getAgent("${params.DEPLOYMENT }") == 'any' ? '' : getAgent("${params.DEPLOYMENT }") } }
 
     parameters{
+        choice(name: 'DEPLOYMENT', choices: ['openshift', 'kubernetes-athens', 'kubernetes-uma'], description: 'Environment where tests will run')
         string(name: 'ROBOT_DOCKER_IMAGE_VERSION', defaultValue: '3.1.1', description: 'Robot Docker image version')
         string(name: 'CAPIF_HOST', defaultValue: 'capifcore', description: 'CAPIF host')
         string(name: 'CAPIF_HTTP_PORT', defaultValue: '8080', description: 'CAPIF http port')
