@@ -79,7 +79,7 @@ pipeline{
                     steps {
                         dir ("${NEF_EMULATOR_DIRECTORY}") {
                             sh """
-                                docker network create services_default
+                                sed -i 's+EXTERNAL_NET=true+EXTERNAL_NET=false+g' env-file-for-local.dev
                                 make prepare-dev-env
                                 make build
                                 make upd
@@ -134,7 +134,6 @@ pipeline{
                     dir ("${env.NEF_EMULATOR_DIRECTORY}") {
                         sh """
                             docker-compose --profile debug down -v --rmi all
-                            docker network rm services_default
                         """
                     }
                 }
