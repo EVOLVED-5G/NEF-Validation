@@ -105,7 +105,6 @@ pipeline{
                                 sed -i "s/CAPIF_HTTP_PORT=8080/CAPIF_HTTP_PORT=${CAPIF_HTTP_PORT}/g" env-file-for-local.dev
                                 sed -i "s/CAPIF_HTTPS_PORT=443/CAPIF_HTTPS_PORT=${CAPIF_HTTPS_PORT}/g" env-file-for-local.dev
                                 sed -i "s/EXTERNAL_NET=true/EXTERNAL_NET=${LOCAL_CAPIF}/g" env-file-for-local.dev
-                                sed -i "s/USE_PUBLIC_KEY_VERIFICATION=true/USE_PUBLIC_KEY_VERIFICATION=false/g" env-file-for-local.dev
                                 make prepare-dev-env
                                 make build
                                 make upd
