@@ -80,6 +80,7 @@ pipeline{
                         dir ("${NEF_EMULATOR_DIRECTORY}") {
                             sh """
                                 sed -i 's+EXTERNAL_NET=true+EXTERNAL_NET=false+g' env-file-for-local.dev
+                                sed -i 's+USE_PUBLIC_KEY_VERIFICATION=true+USE_PUBLIC_KEY_VERIFICATION=false+g' env-file-for-local.dev
                                 make prepare-dev-env
                                 make build
                                 make upd
