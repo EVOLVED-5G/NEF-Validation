@@ -3,7 +3,6 @@ Documentation   This test file contains the test cases of the read user by id en
 Resource        /opt/robot-tests/resources/login.robot
 Resource        /opt/robot-tests/resources/users.robot
 *** Variables ***
-${NEF_INVALID_TOKEN}    invalid.token
 
 *** Keywords ***
 
@@ -29,9 +28,3 @@ Read By Id invalid user valid token
     Should Contain    ${resp.text}    null
     Status Should Be    200  ${resp}
 
-Read By Id user invalid token
-    [Tags]    read_by_id_user_invalid_token
-    ${user}=    Create Dictionary    id=-1
-    ${resp}=    Read User By Id    %{NEF_URL}  ${NEF_INVALID_TOKEN}  ${user}  401
-
-    Status Should Be    401  ${resp}

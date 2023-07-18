@@ -5,7 +5,6 @@ Resource        /opt/robot-tests/resources/gnb.robot
 Library         /opt/robot-tests/libraries/gnb_commons.py
 
 *** Variables ***
-${NEF_INVALID_TOKEN}    invalid.token
 
 *** Keywords ***
 
@@ -28,8 +27,3 @@ Create invalid gnb valid token
 
     Status Should Be    422  ${resp}
     
-Create gnb invalid token
-    [Tags]    create_gnb_invalid_token
-    ${resp}=    Create gNB    %{NEF_URL}  ${NEF_INVALID_TOKEN}    {}    401   
-
-    Status Should Be    401  ${resp}

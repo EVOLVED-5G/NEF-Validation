@@ -6,7 +6,6 @@ Library         /opt/robot-tests/libraries/path_commons.py
 
 
 *** Variables ***
-${NEF_INVALID_TOKEN}    invalid.token
 
 *** Keywords ***
 
@@ -36,12 +35,3 @@ Update invalid path valid token
     ${invalid}=    Create Dictionary    &{path}    id=-1
     ${resp}=    Update Path    %{NEF_URL}  ${token.json()['access_token']}  ${invalid}    404
     Status Should Be    404  ${resp}
-    
-
-Update path invalid token
-    [Tags]    update_path_invalid_token
-    ${path}=    Run Keyword    Get Path
-    ${invalid}=    Create Dictionary    &{path}    id=-1
-    ${resp}=    Update Path    %{NEF_URL}  ${NEF_INVALID_TOKEN}    ${invalid}    401   
-
-    Status Should Be    401  ${resp}

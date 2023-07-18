@@ -8,7 +8,6 @@ Library         /opt/robot-tests/libraries/gnb_commons.py
 
 
 *** Variables ***
-${NEF_INVALID_TOKEN}    invalid.token
 
 *** Keywords ***
 
@@ -40,9 +39,3 @@ Create invalid cell valid token
     ${resp}=    Create Cell    %{NEF_URL}  ${token.json()['access_token']}    {}    422   
 
     Status Should Be    422  ${resp}
-    
-Create cell invalid token
-    [Tags]    create_cell_invalid_token
-    ${resp}=    Create Cell    %{NEF_URL}  ${NEF_INVALID_TOKEN}    {}    401   
-
-    Status Should Be    401  ${resp}

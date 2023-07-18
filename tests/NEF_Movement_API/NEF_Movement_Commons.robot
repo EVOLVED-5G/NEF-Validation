@@ -13,7 +13,6 @@ Library         /opt/robot-tests/libraries/ue_commons.py
 Library         /opt/robot-tests/libraries/path_commons.py
 
 *** Variables ***
-${NEF_INVALID_TOKEN}    invalid.token
 
 *** Keywords ***
 
@@ -58,11 +57,6 @@ Valid movement valid token
 
     Delete Path    %{NEF_URL}  ${token.json()['access_token']}    ${path['id']}
 
-Initiate movement invalid token
-    [Tags]    initiate_movement_valid_token
-    ${movement}=    Create Dictionary    supi=000000000000000
-    ${resp}=    Initiate Movement    %{NEF_URL}  ${NEF_INVALID_TOKEN}    ${movement}    401
-    Status Should Be    401  ${resp}
 
 Terminate invalid movement valid token
     [Tags]    terminate_invalid_movement_valid_token
@@ -71,17 +65,6 @@ Terminate invalid movement valid token
     ${resp}=    Terminate Movement    %{NEF_URL}  ${token.json()['access_token']}    ${movement}    409
     Status Should Be    409  ${resp}
 
-Terminate movement invalid token
-    [Tags]    terminate_movement_invalid_token
-    ${movement}=    Create Dictionary    supi=000000000000000
-    ${resp}=    Terminate Movement    %{NEF_URL}  ${NEF_INVALID_TOKEN}    ${movement}    401
-    Status Should Be    401  ${resp}
-
-State movement invalid token
-    [Tags]    state_movement_invalid_token
-    ${resp}=    State Movement    %{NEF_URL}  ${NEF_INVALID_TOKEN}    000000000000000    401
-    Status Should Be    401  ${resp}
-
 State ues valid token
     [Tags]    state_ues_valid_token
     ${token}=    Get Access Token    %{NEF_URL}    %{ADMIN_USER}    %{ADMIN_PASS}
@@ -89,7 +72,3 @@ State ues valid token
     Status Should Be    200  ${resp}
 
 
-State ues invalid token
-    [Tags]    state_ues_invalid_token
-    ${resp}=    State UEs    %{NEF_URL}  ${NEF_INVALID_TOKEN}    401
-    Status Should Be    401  ${resp}

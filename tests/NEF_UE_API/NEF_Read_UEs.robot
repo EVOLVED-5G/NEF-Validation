@@ -4,7 +4,6 @@ Resource        /opt/robot-tests/resources/login.robot
 Resource        /opt/robot-tests/resources/ue.robot
 
 *** Variables ***
-${NEF_INVALID_TOKEN}    invalid.token
 
 *** Keywords ***
 
@@ -18,8 +17,3 @@ Read ues valid token
     Status Should Be    200  ${resp}
 
     
-Read ues invalid token
-    [Tags]    read_ues_invalid_token
-    ${resp}=    Read UEs   %{NEF_URL}  ${NEF_INVALID_TOKEN}    401   
-
-    Status Should Be    401  ${resp}

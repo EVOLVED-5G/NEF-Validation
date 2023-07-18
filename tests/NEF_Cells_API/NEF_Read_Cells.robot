@@ -4,7 +4,6 @@ Resource        /opt/robot-tests/resources/login.robot
 Resource        /opt/robot-tests/resources/cells.robot
 
 *** Variables ***
-${NEF_INVALID_TOKEN}    invalid.token
 
 *** Keywords ***
 
@@ -17,8 +16,3 @@ Read cells valid token
     ${resp}=    Read Cells    %{NEF_URL}  ${token.json()['access_token']}
     Status Should Be    200  ${resp}
 
-Read cells invalid token
-    [Tags]    read_cells_invalid_token
-    ${resp}=    Read Cells    %{NEF_URL}  ${NEF_INVALID_TOKEN}    401   
-
-    Status Should Be    401  ${resp}

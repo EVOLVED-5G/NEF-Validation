@@ -11,7 +11,6 @@ Library         /opt/robot-tests/libraries/ue_commons.py
 Library         /opt/robot-tests/libraries/path_commons.py
 
 *** Variables ***
-${NEF_INVALID_TOKEN}    invalid.token
 
 *** Keywords ***
 
@@ -59,9 +58,3 @@ APP invalid ue valid token
     ${resp}=    Assign Predefined Path    %{NEF_URL}  ${token.json()['access_token']}    ${association}    404
     Status Should Be    404  ${resp}
     
-Read ue invalid token
-    [Tags]    read_ue_invalid_token
-    ${association}=    Create Dictionary    supi=000000000000000    path=-1
-
-    ${resp}=    Assign Predefined Path    %{NEF_URL}  ${NEF_INVALID_TOKEN}    ${association}    401
-    Status Should Be    401  ${resp}

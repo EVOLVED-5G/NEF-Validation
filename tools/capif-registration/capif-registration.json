@@ -1,0 +1,17 @@
+{
+    "folder_to_store_certificates": "/opt/robot-tests/capif-registration/capif_onboarding",
+    "capif_host": "CAPIF_HOST",
+    "capif_http_port": "CAPIF_HTTP_HOST",
+    "capif_https_port": "CAPIF_HTTPS_HOST",
+    "capif_netapp_username": "robotframework-tests",
+    "capif_netapp_password": "robotframework-tests",
+    "capif_callback_url": "http://localhost:5000",
+    "description": "nef_validation_tests",
+    "csr_common_name": "test_app_common_name",
+    "csr_organizational_unit": "test_app_ou",
+    "csr_organization": "test_app_o",
+    "crs_locality": "Madrid",
+    "csr_state_or_province_name": "Madrid",
+    "csr_country_name": "ES",
+    "csr_email_address": "test@example.com"
+  }

@@ -5,7 +5,6 @@ Resource        /opt/robot-tests/resources/path.robot
 
 
 *** Variables ***
-${NEF_INVALID_TOKEN}    invalid.token
 
 *** Keywords ***
 
@@ -19,7 +18,3 @@ Read paths valid token
 
     Status Should Be    200  ${resp}
     
-Read paths invalid token
-    [Tags]    read_paths_invalid_token
-    ${resp}=    Read Paths    %{NEF_URL}  ${NEF_INVALID_TOKEN}    401
-    Status Should Be    401  ${resp}

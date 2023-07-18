@@ -75,86 +75,10 @@ Delete Request Nef
     [Return]    ${resp}
 
 
-Register User At Jwt Auth
-
-    [Arguments]    ${email}     ${full_name}    ${password}    ${num}  
-
-    ${body}=    Create Dictionary    email=${email}    full_name=${full_name}    password=${password}
-
-    Create Session    mysession    ${NGINX_HOSTNAME}     verify=False
-
-    ${resp}=    POST On Session    mysession    /api/v1/users/open    json=${body}
-
-    Should Be Equal As Strings    ${resp.status_code}    200
-
-    Set Global Variable    ${APF_ID}    ${resp.json()['id']}
-
-    ${access_token}=    Get Token For User    username=${email}    password=${password}
-
-    ${json}=            Import Scenario Body    ${num}  
-
-    Import Scenario     ${json}    ${access_token}
-
-    [Return]    ${access_token}
-
-
-Create Temporary User
-
-    [Arguments]    ${email}=dummy-monitor-%{BUILD_NUMBER}@example.com      ${full_name}=robot    ${password}=password    
-
-    ${body}=    Create Dictionary    email=${email}    full_name=${full_name}    password=${password}
-
-    Create Session    mysession    ${NGINX_HOSTNAME}     verify=False
-
-    ${resp}=    POST On Session    mysession    /api/v1/users/open    json=${body}
-
-    Should Be Equal As Strings    ${resp.status_code}    200
-
-    ${access_token}=    Get Token For User    username=${email}    password=${password}
-
-    [Return]    ${resp.json()['id']}    ${access_token}
-
-
-Get Token For User
-
-    [Arguments]    ${username}=dummy-monitor-%{BUILD_NUMBER}@example.com     ${password}=password    ${secret}=testing  
-
-    ${header}=      Create Dictionary    Content-Type=application/x-www-form-urlencoded;charset=utf-8    Accept=application/json;charset=utf-8
-
-    ${body}=        Create Dictionary    username=${username}    password=${password}    secret=${secret}   
-
-    ${req_body}=    Convert Body    ${body}
-    
-    ${resp}=    POST On Session    mysession    /api/v1/login/access-token    headers=${header}    data=${req_body}    expected_status=any
-
-    Should Be Equal As Strings    ${resp.status_code}    200
-
-    Set Global Variable    ${NEF_BEARER}    ${resp.json()["access_token"]}
-
-    [Return]    ${resp.json()["access_token"]}
-
-
 Import Scenario
 
     [Arguments]     ${json}    ${access_token}
     
     ${resp}=    Post Request Nef    endpoint=/api/v1/utils/import/scenario    json=${json}     auth=${access_token}
 
-    Should Be Equal As Strings    ${resp.status_code}    200
-
-
-Clean Test Information By HTTP Requests
-
-    Create Session    jwtsession    ${NGINX_HOSTNAME}     verify=False
-
-    ${resp}=                      DELETE On Session      jwtsession    /testusers
-    Should Be Equal As Strings    ${resp.status_code}    200
-
-    ${resp}=                      DELETE On Session      jwtsession    /testservice
-    Should Be Equal As Strings    ${resp.status_code}    200
-
-    ${resp}=                      DELETE On Session      jwtsession    /testinvoker
-    Should Be Equal As Strings    ${resp.status_code}    200
-
-    ${resp}=                      DELETE On Session      jwtsession    /testevents
     Should Be Equal As Strings    ${resp.status_code}    200

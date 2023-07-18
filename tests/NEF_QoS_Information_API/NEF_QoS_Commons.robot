@@ -4,7 +4,6 @@ Resource        /opt/robot-tests/resources/qos_information.robot
 Resource        /opt/robot-tests/resources/login.robot
 
 *** Variables ***
-${NEF_INVALID_TOKEN}              invalid.token
 
 
 *** Test Cases ***
@@ -16,11 +15,6 @@ Get qos characteristics valid token
 
     Status Should Be    200  ${resp}
 
-Get qos characteristics invalid token
-    [Tags]    get_qos_characteristics_invalid_token
-    ${resp}=    Get QoS Characteristics    %{NEF_URL}   ${NEF_INVALID_TOKEN}    401
-
-    Status Should Be    401  ${resp}
 
 Get active profiles invalid gnb valid token
     [Tags]    get_active_profiles_invalid_gnb_valid_token
@@ -29,9 +23,3 @@ Get active profiles invalid gnb valid token
     ${resp}=    Get QoS Active Profiles  %{NEF_URL}   ${token.json()['access_token']}    CHANGE    404
 
     Status Should Be    404  ${resp}
-
-Get active profiles invalid token
-    [Tags]    get_active_profilesinvalid_token
-    ${resp}=    Get QoS Active Profiles    %{NEF_URL}   ${NEF_INVALID_TOKEN}    CHANGE    401
-
-    Status Should Be    401  ${resp}

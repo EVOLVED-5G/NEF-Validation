@@ -22,7 +22,7 @@ Create Nef subscription
 
     [Tags]    create_nef_subscription
 
-    Initialize Test, Register And Import Scenario    email=monitor2-%{BUILD_NUMBER}@example.com    full_name=robot-monitor2    password=password    num=2
+    Initialize Test, Register And Import Scenario    num=2
 
     ${subscriber_id}=      Set Variable    ${APF_ID}
 
@@ -263,7 +263,7 @@ Delete individual subscription by unAuthorized NetApp
 
 One-time request to the Monitoring Event API by Authorized NetApp
 
-    Initialize Test, Register And Import Scenario    email=onetime-%{BUILD_NUMBER}@example.com    full_name=robot-onetime    password=password    num=1
+    Initialize Test, Register And Import Scenario    num=1
 
     ${subscriber_id}=          Set Variable    ${APF_ID}
 

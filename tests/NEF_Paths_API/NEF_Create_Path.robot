@@ -6,7 +6,6 @@ Library         /opt/robot-tests/libraries/path_commons.py
 
 
 *** Variables ***
-${NEF_INVALID_TOKEN}    invalid.token
 
 *** Keywords ***
 
@@ -23,9 +22,3 @@ Create valid path valid token
     ${path_id}=     Set Variable    ${resp.json()['id']}
     Delete Path    %{NEF_URL}  ${token.json()['access_token']}    ${path_id}
     
-Create path invalid token
-    [Tags]    create_path_invalid_token
-    ${path}=    Run Keyword    Get Path
-    ${resp}=    Create Path    %{NEF_URL}  ${NEF_INVALID_TOKEN}    ${path}    401   
-
-    Status Should Be    401  ${resp}

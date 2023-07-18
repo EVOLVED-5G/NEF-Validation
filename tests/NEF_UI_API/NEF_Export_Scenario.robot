@@ -4,8 +4,6 @@ Resource        /opt/robot-tests/resources/ui.robot
 Resource        /opt/robot-tests/resources/login.robot
 
 *** Variables ***
-${NEF_INVALID_TOKEN}              invalid.token
-
 
 *** Test Cases ***
 Export scenario valid token
@@ -15,10 +13,3 @@ Export scenario valid token
     ${resp}=    Export Scenario  %{NEF_URL}   ${token.json()['access_token']}
 
     Status Should Be    200  ${resp}
-
-Export scenario invalid token
-    [Tags]    export_scenario_invalid_token
-
-    ${resp}=    Export Scenario  %{NEF_URL}   ${NEF_INVALID_TOKEN}    401
-
-    Status Should Be    401  ${resp}

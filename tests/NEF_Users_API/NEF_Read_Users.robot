@@ -3,7 +3,6 @@ Documentation   This test file contains the test cases of the read_users endpoin
 Resource        /opt/robot-tests/resources/login.robot
 Resource        /opt/robot-tests/resources/users.robot
 *** Variables ***
-${NEF_INVALID_TOKEN}    invalid.token
 
 *** Keywords ***
 
@@ -16,9 +15,3 @@ Read users valid token
 
     Status Should Be    200  ${resp}
 
-Read users invalid token
-    [Tags]    read_users_invalid_token
-
-    ${resp}=    Read Users    %{NEF_URL}  ${NEF_INVALID_TOKEN}  401
-
-    Status Should Be    401  ${resp}

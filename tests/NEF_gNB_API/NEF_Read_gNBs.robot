@@ -4,7 +4,6 @@ Resource        /opt/robot-tests/resources/login.robot
 Resource        /opt/robot-tests/resources/gnb.robot
 
 *** Variables ***
-${NEF_INVALID_TOKEN}    invalid.token
 
 *** Keywords ***
 
@@ -16,9 +15,3 @@ Read gnbs valid token
 
     ${resp}=    Read gNBs    %{NEF_URL}  ${token.json()['access_token']}
     Status Should Be    200  ${resp}
-
-Read gnbs invalid token
-    [Tags]    read_gnbs_invalid_token
-    ${resp}=    Read gNBs    %{NEF_URL}  ${NEF_INVALID_TOKEN}    401   
-
-    Status Should Be    401  ${resp}

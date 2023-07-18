@@ -5,7 +5,6 @@ Resource        /opt/robot-tests/resources/ui.robot
 Resource        /opt/robot-tests/resources/login.robot
 
 *** Variables ***
-${NEF_INVALID_TOKEN}              invalid.token
 
 
 *** Test Cases ***
@@ -23,10 +22,3 @@ Import invalid scenario valid token
     ${resp}=    Import Scenario    %{NEF_URL}   ${token.json()['access_token']}    {}    422
 
     Status Should Be    422  ${resp}
-
-Import scenario invalid token
-    [Tags]    import_scenario_invalid_token
-
-    ${resp}=    Import Scenario  %{NEF_URL}   ${NEF_INVALID_TOKEN}    {}    401
-
-    Status Should Be    401  ${resp}

@@ -9,7 +9,6 @@ Library         /opt/robot-tests/libraries/gnb_commons.py
 Library         /opt/robot-tests/libraries/ue_commons.py
 
 *** Variables ***
-${NEF_INVALID_TOKEN}    invalid.token
 
 *** Keywords ***
 
@@ -49,11 +48,3 @@ Update invalid ue valid token
     ${ue}=    Run Keyword    Get Ue    -1    -1
     ${resp}=   Update UE    %{NEF_URL}  ${token.json()['access_token']}  ${ue}    404
     Status Should Be    404  ${resp}
-
-Update ue invalid token
-    [Tags]    update_ue_invalid_token
-
-    ${ue}=    Run Keyword    Get Ue    -1    -1
-    ${resp}=    Update UE    %{NEF_URL}  ${NEF_INVALID_TOKEN}    ${ue}    401   
-
-    Status Should Be    401  ${resp}

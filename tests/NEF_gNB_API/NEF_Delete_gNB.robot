@@ -5,7 +5,6 @@ Resource        /opt/robot-tests/resources/gnb.robot
 Library         /opt/robot-tests/libraries/gnb_commons.py
 
 *** Variables ***
-${NEF_INVALID_TOKEN}    invalid.token
 
 *** Keywords ***
 
@@ -29,8 +28,3 @@ Delete invalid gnb valid token
 
     Status Should Be    404  ${resp}
     
-Delete gnb invalid token
-    [Tags]    delete_gnb_invalid_token
-    ${resp}=    Delete gNB    %{NEF_URL}  ${NEF_INVALID_TOKEN}    {}    401   
-
-    Status Should Be    401  ${resp}

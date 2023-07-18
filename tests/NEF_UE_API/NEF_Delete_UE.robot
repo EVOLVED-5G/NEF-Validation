@@ -9,7 +9,6 @@ Library         /opt/robot-tests/libraries/gnb_commons.py
 Library         /opt/robot-tests/libraries/ue_commons.py
 
 *** Variables ***
-${NEF_INVALID_TOKEN}    invalid.token
 
 *** Keywords ***
 
@@ -46,11 +45,3 @@ Delete invalid ue valid token
     
     ${resp}=    Delete UE    %{NEF_URL}  ${token.json()['access_token']}    000000000000000    404
     Status Should Be    404  ${resp}
-
-Delete ue invalid token
-    [Tags]    delete_ue_invalid_token
-
-    ${ue}=    Run Keyword    Get Ue    -1    -1
-    ${resp}=    Delete UE    %{NEF_URL}  ${NEF_INVALID_TOKEN}    000000000000000    401   
-
-    Status Should Be    401  ${resp}

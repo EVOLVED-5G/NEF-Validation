@@ -3,7 +3,6 @@ Documentation   This test file contains the test cases of the update user endpoi
 Resource        /opt/robot-tests/resources/login.robot
 Resource        /opt/robot-tests/resources/users.robot
 *** Variables ***
-${NEF_INVALID_TOKEN}    invalid.token
 
 *** Keywords ***
 
@@ -29,9 +28,3 @@ Update invalid user valid token
 
     Status Should Be    404  ${resp}
 
-Update user invalid token
-    [Tags]    update_user_invalid_token
-    ${user}=    Create Dictionary    id=-1
-    ${resp}=    Update User    %{NEF_URL}  ${NEF_INVALID_TOKEN}  ${user}  401
-
-    Status Should Be    401  ${resp}

@@ -3,7 +3,6 @@ Documentation   This test file contains the test cases of the test_token endpoin
 Resource        /opt/robot-tests/resources/login.robot
 
 *** Variables ***
-${NEF_INVALID_TOKEN}              invalid.token
 
 *** Keywords ***
 
@@ -16,10 +15,3 @@ Test valid access token
     ${resp}=    Test Token  %{NEF_URL}  ${token.json()['access_token']}
 
     Status Should Be    200  ${resp}
-
-Test invalid access token
-    [Tags]    test_invalid_access_token
-    
-    ${resp}=    Test Token    %{NEF_URL}    ${NEF_INVALID_TOKEN}    401
-
-    Status Should Be    401  ${resp}

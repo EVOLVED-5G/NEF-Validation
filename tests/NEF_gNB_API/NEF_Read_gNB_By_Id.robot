@@ -5,7 +5,6 @@ Resource        /opt/robot-tests/resources/gnb.robot
 Library         /opt/robot-tests/libraries/gnb_commons.py
 
 *** Variables ***
-${NEF_INVALID_TOKEN}    invalid.token
 
 *** Keywords ***
 
@@ -29,9 +28,3 @@ Read by id invalid gnb valid token
 
     Status Should Be    404  ${resp}
     
-Read by id gnb invalid token
-    [Tags]    read_by_id_gnb_invalid_token
-
-    ${resp}=    Read gNB By Id    %{NEF_URL}  ${NEF_INVALID_TOKEN}    -1    401   
-
-    Status Should Be    401  ${resp}

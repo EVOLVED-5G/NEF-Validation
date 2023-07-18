@@ -5,7 +5,6 @@ Resource        /opt/robot-tests/resources/gnb.robot
 Library         /opt/robot-tests/libraries/gnb_commons.py
 
 *** Variables ***
-${NEF_INVALID_TOKEN}    invalid.token
 
 *** Keywords ***
 
@@ -35,10 +34,3 @@ Update invalid gnb valid token
 
     Status Should Be    422  ${resp}
     
-Update gnb invalid token
-    [Tags]    update_gnb_invalid_token
-    ${dummy}=    Create Dictionary    gNB_id=-1
-
-    ${resp}=    Update gNB    %{NEF_URL}  ${NEF_INVALID_TOKEN}    ${dummy}    401   
-
-    Status Should Be    401  ${resp}

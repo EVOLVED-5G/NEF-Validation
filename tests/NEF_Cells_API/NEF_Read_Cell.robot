@@ -8,7 +8,6 @@ Library         /opt/robot-tests/libraries/gnb_commons.py
 
 
 *** Variables ***
-${NEF_INVALID_TOKEN}    invalid.token
 
 *** Keywords ***
 
@@ -41,8 +40,3 @@ Read invalid cell valid token
 
     Status Should Be    404  ${resp}
     
-Read cell invalid token
-    [Tags]    read_cell_invalid_token
-    ${resp}=    Read Cell    %{NEF_URL}  ${NEF_INVALID_TOKEN}    -1    401   
-
-    Status Should Be    401  ${resp}

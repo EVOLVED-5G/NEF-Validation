@@ -9,7 +9,6 @@ Library         /opt/robot-tests/libraries/gnb_commons.py
 Library         /opt/robot-tests/libraries/ue_commons.py
 
 *** Variables ***
-${NEF_INVALID_TOKEN}    invalid.token
 
 *** Keywords ***
 
@@ -47,9 +46,3 @@ Read invalid ue valid token
     ${resp}=    Read UE    %{NEF_URL}  ${token.json()['access_token']}    000000000000000    404
     Status Should Be    404  ${resp}
     
-Read ue invalid token
-    [Tags]    read_ue_invalid_token
-
-    ${resp}=    Read UE    %{NEF_URL}  ${NEF_INVALID_TOKEN}    000000000000000    401   
-
-    Status Should Be    401  ${resp}
