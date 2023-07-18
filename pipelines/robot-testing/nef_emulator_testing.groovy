@@ -24,7 +24,7 @@ pipeline{
     agent { node { label getAgent("${params.DEPLOYMENT }") == 'any' ? '' : getAgent("${params.DEPLOYMENT }") } }
 
     parameters{
-        choice(name: 'DEPLOYMENT', choices: ['openshift', 'kubernetes-athens', 'kubernetes-uma'], description: 'Environment where tests will run')
+        choice(name: 'DEPLOYMENT', choices: ['kubernetes-uma', 'openshift', 'kubernetes-athens'], description: 'Environment where tests will run')
         string(name: 'ROBOT_DOCKER_IMAGE_VERSION', defaultValue: '3.1.1', description: 'Robot Docker image version')
         string(name: 'CAPIF_HOST', defaultValue: 'capifcore', description: 'CAPIF host')
         string(name: 'CAPIF_HTTP_PORT', defaultValue: '8080', description: 'CAPIF http port')
@@ -209,9 +209,11 @@ pipeline{
     post{
         always{
             script {
-                sh """
-                    docker kill robot
-                """
+                catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS'){
+                    sh """
+                        docker kill robot
+                    """
+                }
                 if(env.RUN_LOCAL_NEF == 'true'){
                     dir ("./nef-services") {
                         echo 'Shutdown all nef services'
