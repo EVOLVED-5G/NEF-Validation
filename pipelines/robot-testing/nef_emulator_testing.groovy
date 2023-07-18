@@ -134,52 +134,54 @@ pipeline{
                 }
                 stage("Setup RobotFramwork container"){
                     steps{
-                        if(env.LOCAL_CAPIF == 'true'){
-                            dir ("${WORKSPACE}") {
-                                sh """
-                                    docker pull ${ROBOT_IMAGE_NAME}:${ROBOT_VERSION} 
-                                    docker run --rm -d -t \
-                                        --name robot \
-                                        --network="host" \
-                                        --add-host=capifcore=127.0.0.1 \
-                                        -v ${WORKSPACE}/tests:/opt/robot-tests/tests/ \
-                                        -v ${WORKSPACE}/libraries:/opt/robot-tests/libraries/ \
-                                        -v ${WORKSPACE}/resources:/opt/robot-tests/resources/ \
-                                        -v ${WORKSPACE}/results:/opt/robot-tests/results/ \
-                                        -v ${WORKSPACE}/tools/capif-registration:/opt/robot-tests/capif-registration \
-                                        --env NEF_URL=${NGINX_HOSTNAME} \
-                                        --env BUILD_NUMBER=$BUILD_NUMBER \
-                                        --env NGINX_HOSTNAME=${NGINX_HOSTNAME} \
-                                        --env ADMIN_USER=${ADMIN_USER} \
-                                        --env ADMIN_PASS=$ADMIN_PASS \
-                                        --env CERTS_PATH=/opt/robot-tests/capif-registration/capif_onboarding \
-                                        --env CAPIF_HOST=${CAPIF_HOST} \
-                                        --env CAPIF_HTTPS_PORT=${CAPIF_HTTPS_PORT} \
-                                        ${ROBOT_IMAGE_NAME}:${ROBOT_VERSION} 
-                                """
-                            }
-                        }else{
-                            dir ("${WORKSPACE}") {
-                                sh """
-                                    docker pull ${ROBOT_IMAGE_NAME}:${ROBOT_VERSION} 
-                                    docker run --rm -d -t \
-                                        --name robot \
-                                        --network="host" \
-                                        -v ${WORKSPACE}/tests:/opt/robot-tests/tests/ \
-                                        -v ${WORKSPACE}/libraries:/opt/robot-tests/libraries/ \
-                                        -v ${WORKSPACE}/resources:/opt/robot-tests/resources/ \
-                                        -v ${WORKSPACE}/results:/opt/robot-tests/results/ \
-                                        -v ${WORKSPACE}/tools/capif-registration:/opt/robot-tests/capif-registration \
-                                        --env NEF_URL=${NGINX_HOSTNAME} \
-                                        --env BUILD_NUMBER=$BUILD_NUMBER \
-                                        --env NGINX_HOSTNAME=${NGINX_HOSTNAME} \
-                                        --env ADMIN_USER=${ADMIN_USER} \
-                                        --env ADMIN_PASS=$ADMIN_PASS \
-                                        --env CERTS_PATH=/opt/robot-tests/capif-registration/capif_onboarding \
-                                        --env CAPIF_HOST=${CAPIF_HOST} \
-                                        --env CAPIF_HTTPS_PORT=${CAPIF_HTTPS_PORT} \
-                                        ${ROBOT_IMAGE_NAME}:${ROBOT_VERSION} 
-                                """
+                        script{
+                            if(env.LOCAL_CAPIF == 'true'){
+                                dir ("${WORKSPACE}") {
+                                    sh """
+                                        docker pull ${ROBOT_IMAGE_NAME}:${ROBOT_VERSION} 
+                                        docker run --rm -d -t \
+                                            --name robot \
+                                            --network="host" \
+                                            --add-host=capifcore=127.0.0.1 \
+                                            -v ${WORKSPACE}/tests:/opt/robot-tests/tests/ \
+                                            -v ${WORKSPACE}/libraries:/opt/robot-tests/libraries/ \
+                                            -v ${WORKSPACE}/resources:/opt/robot-tests/resources/ \
+                                            -v ${WORKSPACE}/results:/opt/robot-tests/results/ \
+                                            -v ${WORKSPACE}/tools/capif-registration:/opt/robot-tests/capif-registration \
+                                            --env NEF_URL=${NGINX_HOSTNAME} \
+                                            --env BUILD_NUMBER=$BUILD_NUMBER \
+                                            --env NGINX_HOSTNAME=${NGINX_HOSTNAME} \
+                                            --env ADMIN_USER=${ADMIN_USER} \
+                                            --env ADMIN_PASS=$ADMIN_PASS \
+                                            --env CERTS_PATH=/opt/robot-tests/capif-registration/capif_onboarding \
+                                            --env CAPIF_HOST=${CAPIF_HOST} \
+                                            --env CAPIF_HTTPS_PORT=${CAPIF_HTTPS_PORT} \
+                                            ${ROBOT_IMAGE_NAME}:${ROBOT_VERSION} 
+                                    """
+                                }
+                            }else{
+                                dir ("${WORKSPACE}") {
+                                    sh """
+                                        docker pull ${ROBOT_IMAGE_NAME}:${ROBOT_VERSION} 
+                                        docker run --rm -d -t \
+                                            --name robot \
+                                            --network="host" \
+                                            -v ${WORKSPACE}/tests:/opt/robot-tests/tests/ \
+                                            -v ${WORKSPACE}/libraries:/opt/robot-tests/libraries/ \
+                                            -v ${WORKSPACE}/resources:/opt/robot-tests/resources/ \
+                                            -v ${WORKSPACE}/results:/opt/robot-tests/results/ \
+                                            -v ${WORKSPACE}/tools/capif-registration:/opt/robot-tests/capif-registration \
+                                            --env NEF_URL=${NGINX_HOSTNAME} \
+                                            --env BUILD_NUMBER=$BUILD_NUMBER \
+                                            --env NGINX_HOSTNAME=${NGINX_HOSTNAME} \
+                                            --env ADMIN_USER=${ADMIN_USER} \
+                                            --env ADMIN_PASS=$ADMIN_PASS \
+                                            --env CERTS_PATH=/opt/robot-tests/capif-registration/capif_onboarding \
+                                            --env CAPIF_HOST=${CAPIF_HOST} \
+                                            --env CAPIF_HTTPS_PORT=${CAPIF_HTTPS_PORT} \
+                                            ${ROBOT_IMAGE_NAME}:${ROBOT_VERSION} 
+                                    """
+                                }
                             }
                         }
                     }
