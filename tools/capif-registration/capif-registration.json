@@ -1,8 +1,8 @@
 {
     "folder_to_store_certificates": "/opt/robot-tests/capif-registration/capif_onboarding",
     "capif_host": "CAPIF_HOST",
-    "capif_http_port": "CAPIF_HTTP_HOST",
-    "capif_https_port": "CAPIF_HTTPS_HOST",
+    "capif_http_port": "CAPIF_HTTP_PORT",
+    "capif_https_port": "CAPIF_HTTPS_PORT",
     "capif_netapp_username": "robotframework-tests",
     "capif_netapp_password": "robotframework-tests",
     "capif_callback_url": "http://localhost:5000",

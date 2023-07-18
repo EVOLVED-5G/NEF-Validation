@@ -125,9 +125,9 @@ pipeline{
                             sh """
                                 sed -i "s/CAPIF_HOST/${CAPIF_HOST}/g" ${WORKSPACE}/tools/capif-registration/capif-registration.json
                                 sed -i "s/CAPIF_HTTP_PORT/${CAPIF_HTTP_PORT}/g" ${WORKSPACE}/tools/capif-registration/capif-registration.json
+                                sed -i "s/CAPIF_HTTPS_PORT/${CAPIF_HTTPS_PORT}/g" ${WORKSPACE}/tools/capif-registration/capif-registration.json
                                 sed -i "s/CAPIF_HOST/${CAPIF_HOST}/g" ${WORKSPACE}/tools/capif-registration/register.sh
                                 sed -i "s/CAPIF_HTTP_PORT/${CAPIF_HTTP_PORT}/g" ${WORKSPACE}/tools/capif-registration/register.sh
-                                sed -i "s/CAPIF_HTTPS_PORT/${CAPIF_HTTPS_PORT}/g" ${WORKSPACE}/tools/capif-registration/register.sh
                             """
                         }
                     }
