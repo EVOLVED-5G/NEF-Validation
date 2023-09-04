@@ -12,9 +12,11 @@ def getAgent(deployment) {
     String var = deployment
     if ('openshift'.equals(var)) {
         return 'evol5-openshift'
-    }else if ('kubernetes-athens'.equals(var)) {
+    } else if ('kubernetes-athens'.equals(var)) {
         return 'evol5-athens'
-    }else {
+    } else if ('kubernetes-cosmote'.equals(var)) {
+        return 'evol5-cosmote'
+    } else {
         return 'evol5-slave'
     }
 }
@@ -24,7 +26,7 @@ pipeline{
     agent { node { label getAgent("${params.DEPLOYMENT }") == 'any' ? '' : getAgent("${params.DEPLOYMENT }") } }
 
     parameters{
-        choice(name: 'DEPLOYMENT', choices: ['kubernetes-uma', 'openshift', 'kubernetes-athens'], description: 'Environment where tests will run')
+        choice(name: 'DEPLOYMENT', choices: ['kubernetes-uma', 'kubernetes-athens', 'kubernetes-cosmote', 'openshift'], description: 'Environment where tests will run')
         string(name: 'ROBOT_DOCKER_IMAGE_VERSION', defaultValue: '3.1.1', description: 'Robot Docker image version')
         string(name: 'CAPIF_HOST', defaultValue: 'capifcore', description: 'CAPIF host')
         string(name: 'CAPIF_HTTP_PORT', defaultValue: '8080', description: 'CAPIF http port')
@@ -177,7 +179,7 @@ pipeline{
                                             --env ADMIN_USER=${ADMIN_USER} \
                                             --env ADMIN_PASS=$ADMIN_PASS \
                                             --env CERTS_PATH=/opt/robot-tests/capif-registration/capif_onboarding \
-                                            --env CAPIF_HOST=${CAPIF_HOST} \
+                                            --env CAPIF_HOST=${CAPIF_HOST}:${CAPIF_HTTPS_PORT}  \
                                             --env CAPIF_HTTPS_PORT=${CAPIF_HTTPS_PORT} \
                                             ${ROBOT_IMAGE_NAME}:${ROBOT_VERSION} 
                                     """
