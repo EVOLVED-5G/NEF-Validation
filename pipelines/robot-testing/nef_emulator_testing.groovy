@@ -177,7 +177,7 @@ pipeline{
                                             --env ADMIN_USER=${ADMIN_USER} \
                                             --env ADMIN_PASS=$ADMIN_PASS \
                                             --env CERTS_PATH=/opt/robot-tests/capif-registration/capif_onboarding \
-                                            --env CAPIF_HOST=${CAPIF_HOST} \
+                                            --env CAPIF_HOST=${CAPIF_HOST}:${CAPIF_HTTPS_PORT}  \
                                             --env CAPIF_HTTPS_PORT=${CAPIF_HTTPS_PORT} \
                                             ${ROBOT_IMAGE_NAME}:${ROBOT_VERSION} 
                                     """
