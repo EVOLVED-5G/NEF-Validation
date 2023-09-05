@@ -13,13 +13,11 @@ pipeline {
         ansiColor('xterm')
     }
     parameters {
-        // string(name: 'BRANCH_NAME', defaultValue: 'develop', description: 'Deployment git branch name')
         choice(name: 'FORCE_DOCKER_CLEAN_BUILD', choices: ['False', 'True'], description: 'Force Docker Clean Build. Default use cached images (False)')
-        string(name: 'ROBOT_DOCKER_IMAGE_VERSION', defaultValue: '1.0', description: 'Robot Docker image version')
+        string(name: 'ROBOT_DOCKER_IMAGE_VERSION', defaultValue: '3.1.1', description: 'Robot Docker image version')
         booleanParam(name: 'GENERATE_ROBOT_DOCKER_IMAGE', defaultValue: false, description: 'Check if robot docker image should be generated')
     }
     environment {
-        BRANCH_NAME = "${params.BRANCH_NAME}"
         CACHE = forceDockerCleanBuild("${params.FORCE_DOCKER_CLEAN_BUILD}")
         ROBOT_VERSION = dockerVersion("${params.ROBOT_DOCKER_IMAGE_VERSION}")
         GENERATE_ROBOT = "${params.GENERATE_ROBOT_DOCKER_IMAGE}"
@@ -33,16 +31,16 @@ pipeline {
             steps {
                 dir ("${WORKSPACE}/tools") {
                     withCredentials([usernamePassword(
-                    credentialsId: 'docker_pull_cred',
-                    usernameVariable: 'USER',
-                    passwordVariable: 'PASS'
-                   )]) {
+                            credentialsId: 'docker_pull_cred',
+                            usernameVariable: 'USER',
+                            passwordVariable: 'PASS'
+                    )]) {
                         sh '''
                         docker login --username ${USER} --password ${PASS} dockerhub.hi.inet
-                        docker build ${CACHE} ./robot -t ${ROBOT_IMAGE_NAME}:${ROBOT_VERSION}
+                        docker build ${CACHE} . -t ${ROBOT_IMAGE_NAME}:${ROBOT_VERSION}
                         docker push ${ROBOT_IMAGE_NAME}:${ROBOT_VERSION}
                       '''
-                   }
+                    }
                 }
             }
         }
